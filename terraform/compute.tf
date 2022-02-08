@@ -7,7 +7,7 @@ resource "aws_instance" "bastion" {
     vpc_security_group_ids = [aws_security_group.bastion-public.id]
 
     tags = {
-        Name = "bastion"
+        Name = "bastion-instance"
     }
 }
 
@@ -28,7 +28,7 @@ resource "aws_instance" "holm-services" {
     }
 
     tags = {
-        Name = "holm-services"
+        Name = "holm-services-instance"
     }
 }
 

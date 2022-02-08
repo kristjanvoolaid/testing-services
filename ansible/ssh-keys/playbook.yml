@@ -1,0 +1,16 @@
+---
+- hosts: holmservices
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Copy github public ssh key to holm instance
+      copy:
+        src: files/github.pub
+        dest: ubuntu/.ssh/authorized_keys
+
+
+    - name: Copy jenkins public ssh key to holm instance
+      copy:
+        src: files/jenkins.pub
+        dest: ubuntu/.ssh/authorized_keys
