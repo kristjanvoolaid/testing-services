@@ -4,13 +4,29 @@
   gather_facts: false
 
   tasks:
+    - name: Creates .ssh directory
+      file:
+        path: /home/ubuntu/.ssh
+        state: directory
+
     - name: Copy github public ssh key to holm instance
       copy:
         src: files/github.pub
-        dest: ubuntu/.ssh/authorized_keys
-
+        dest: /home/ubuntu/.ssh/
 
     - name: Copy jenkins public ssh key to holm instance
       copy:
         src: files/jenkins.pub
-        dest: ubuntu/.ssh/authorized_keys
+        dest: /home/ubuntu/.ssh/
+
+    - name: Add github public ssh key to authorized_keys file
+      ansible.builtin.shell: cat github.pub >> authorized_keys
+      args:
+        chdir: /home/ubuntu/.ssh/
+      become: true
+
+    - name: Add jenkins public ssh key to authorized_keys file
+      ansible.builtin.shell: cat jenkins.pub >> authorized_keys
+      args:
+        chdir: /home/ubuntu/.ssh/
+      become: true
