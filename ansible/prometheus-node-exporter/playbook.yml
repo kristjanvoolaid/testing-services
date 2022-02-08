@@ -1,0 +1,47 @@
+---
+- hosts: holmservices
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+    
+    - name: Add Docker gpg
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add docker repo
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker
+      pip:
+        name: docker
+
+    - name: Install docker-compose
+      apt:
+        name: docker-compose
+        state: present
+    
+    - name: copy docker-compose file at holm-services instance
+      copy:
+        src: files/docker-compose.yml
+        dest: /tmp/
+
+    - name: copy promethus.yml file to holm-services instance
+      copy:
+        src: files/prometheus.yml
+        dest: /tmp/
+        
+    - name: Run Promethus & node exporter
+      ansible.builtin.shell: docker-compose up -d
+      args:
+        chdir: /tmp/
+      become: true

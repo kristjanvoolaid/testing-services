@@ -1,0 +1,5 @@
+# Local variables
+key_name      = "" # Insert key name
+key_file_path = "" # Insert key location
+ip_address    = "" # Insert your public IP
+region        = "" # Insert aws region to deploy
